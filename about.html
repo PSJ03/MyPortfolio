@@ -12,8 +12,56 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
     />
+    <style>
+      /* 기본 다크모드 배경 및 텍스트 */
+      [data-bs-theme='dark'] {
+        background-color: #121212 !important;
+        color: #e0e0e0 !important;
+      }
+
+      /* 네비게이션바 및 푸터 */
+      [data-bs-theme='dark'] .navbar.bg-dark,
+      [data-bs-theme='dark'] footer.bg-dark {
+        background-color: #000 !important;
+        border-bottom: 1px solid #333;
+      }
+
+      /* 카드 컴포넌트 */
+      [data-bs-theme='dark'] .card {
+        background-color: #1e1e1e !important;
+        color: #f8f9fa !important;
+        border: 1px solid #333 !important;
+      }
+
+      /* 텍스트 색상 보정 */
+      [data-bs-theme='dark'] .text-muted {
+        color: #a0a0a0 !important;
+      }
+      [data-bs-theme='dark'] .text-secondary {
+        color: #bcbcbc !important;
+      }
+      [data-bs-theme='dark'] .text-dark {
+        color: #ffffff !important;
+      }
+      /* 필터 버튼 다크모드 대응 */
+      [data-bs-theme='dark'] .btn-outline-dark {
+        color: #f8f9fa !important;
+        border-color: #f8f9fa !important;
+      }
+
+      [data-bs-theme='dark'] .btn-outline-dark:hover {
+        background-color: #f8f9fa !important;
+        color: #121212 !important;
+      }
+
+      [data-bs-theme='dark'] .btn-dark {
+        background-color: #f8f9fa !important;
+        color: #121212 !important;
+        border-color: #f8f9fa !important;
+      }
+    </style>
   </head>
-  <body class="d-flex flex-column min-vh-100 bg-light">
+  <body class="d-flex flex-column min-vh-100 bg-body">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
         <a class="navbar-brand fw-bold" href="index.html">MY PORTFOLIO</a>
@@ -90,5 +138,73 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="position-fixed bottom-0 end-0 p-4" style="z-index: 1050">
+      <button
+        id="darkModeToggle"
+        class="btn btn-dark rounded-circle shadow mb-2 d-flex justify-content-center align-items-center"
+        style="width: 50px; height: 50px"
+      >
+        <i class="bi bi-moon-fill fs-5"></i>
+      </button>
+      <button
+        id="scrollTopBtn"
+        class="btn btn-secondary rounded-circle shadow d-none justify-content-center align-items-center"
+        style="width: 50px; height: 50px"
+      >
+        <i class="bi bi-arrow-up fs-5"></i>
+      </button>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // --- 1. 다크 모드 제어 ---
+        const darkModeToggle = document.getElementById('darkModeToggle')
+        const htmlElement = document.documentElement // Bootstrap 5.3 다크모드 기준 태그
+        const icon = darkModeToggle.querySelector('i')
+
+        // 로컬 스토리지에서 이전 테마 설정 불러오기
+        if (localStorage.getItem('theme') === 'dark') {
+          htmlElement.setAttribute('data-bs-theme', 'dark')
+          icon.classList.replace('bi-moon-fill', 'bi-sun-fill')
+          darkModeToggle.classList.replace('btn-dark', 'btn-light')
+        }
+
+        // 토글 버튼 클릭 이벤트
+        darkModeToggle.addEventListener('click', () => {
+          if (htmlElement.getAttribute('data-bs-theme') === 'dark') {
+            // 라이트 모드로 전환
+            htmlElement.removeAttribute('data-bs-theme')
+            localStorage.setItem('theme', 'light')
+            icon.classList.replace('bi-sun-fill', 'bi-moon-fill')
+            darkModeToggle.classList.replace('btn-light', 'btn-dark')
+          } else {
+            // 다크 모드로 전환
+            htmlElement.setAttribute('data-bs-theme', 'dark')
+            localStorage.setItem('theme', 'dark')
+            icon.classList.replace('bi-moon-fill', 'bi-sun-fill')
+            darkModeToggle.classList.replace('btn-dark', 'btn-light')
+          }
+        })
+
+        // --- 2. 스크롤 맨 위로 가기 제어 ---
+        const scrollTopBtn = document.getElementById('scrollTopBtn')
+
+        // 스크롤 감지하여 버튼 표시/숨김
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 200) {
+            scrollTopBtn.classList.remove('d-none')
+            scrollTopBtn.classList.add('d-flex')
+          } else {
+            scrollTopBtn.classList.remove('d-flex')
+            scrollTopBtn.classList.add('d-none')
+          }
+        })
+
+        // 클릭 시 부드럽게 맨 위로
+        scrollTopBtn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        })
+      })
+    </script>
   </body>
 </html>
